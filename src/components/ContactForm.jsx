@@ -4,6 +4,7 @@ import styles from "./ContactForm.module.css";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../redux/operations";
+import { selectContacts } from "../redux/selectors";
 
 const userSchema = Yup.object().shape({
   name: Yup.string()
@@ -11,33 +12,35 @@ const userSchema = Yup.object().shape({
     .max(50, "Name is too long")
     .required("Required"),
   number: Yup.string()
-    // .matches(/^\d{7}$/, "Number must be exactly 7 digits")
+    .matches(/^\d{10}$/, "Number must be exactly 10 digits")
     .required("Required"),
 });
 
-// const formatNumber = (number) => {
-//   return `${number.slice(0, 3)}-${number.slice(3, 5)}-${number.slice(5)}`;
-// };
+const formatNumber = (number) => {
+  return `${number.slice(0, 3)}-${number.slice(3, 6)}-${number.slice(6)}`;
+};
 
 const ContactForm = () => {
   const dispatch = useDispatch();
   const nameFieldId = useId();
   const numberFieldId = useId();
-  const contacts = useSelector((state) => state.contacts.items);
+  const contacts = useSelector(selectContacts);
 
   const handleSubmit = (values, actions) => {
-    // const formattedNumber = formatNumber(values.number);
+    const formattedNumber = formatNumber(values.number);
     const contactExists = (contacts || []).some(
       (contact) =>
-        contact.name === values.name || contact.number === values.number
+        contact.name === values.name ||
+        contact.number === formattedNumber ||
+        contact.number === values.number
     );
 
     if (contactExists) {
-      alert("This contact already exists.");
+      alert("This contact already exists!");
       return;
     }
 
-    dispatch(addContact(values.name, values.number));
+    dispatch(addContact({ name: values.name, number: formattedNumber }));
     actions.resetForm();
   };
 
@@ -63,7 +66,7 @@ const ContactForm = () => {
                 type="text"
                 name="number"
                 id={numberFieldId}
-                // maxLength={7}
+                maxLength={10}
               ></Field>
               <ErrorMessage
                 name="number"

@@ -22,8 +22,6 @@ const contactsSlice = createSlice({
     builder
       .addCase(fetchContacts.pending, handlePending)
       .addCase(fetchContacts.fulfilled, (state, action) => {
-        console.log(state);
-
         state.contacts.loading = false;
         state.contacts.error = null;
         state.contacts.items = action.payload;
@@ -31,11 +29,13 @@ const contactsSlice = createSlice({
       .addCase(fetchContacts.rejected, handleRejected)
       .addCase(addContact.pending, handlePending)
       .addCase(addContact.fulfilled, (state, action) => {
+        state.contacts.loading = false;
         state.contacts.items.push(action.payload);
       })
       .addCase(addContact.rejected, handleRejected)
       .addCase(deleteContact.pending, handlePending)
       .addCase(deleteContact.fulfilled, (state, action) => {
+        state.contacts.loading = false;
         state.contacts.items = state.contacts.items.filter(
           (contact) => contact.id !== action.payload.id
         );
@@ -45,24 +45,3 @@ const contactsSlice = createSlice({
 });
 
 export const contactsReducer = contactsSlice.reducer;
-
-// addContact: {
-//   reducer(state, action) {
-//     state.items.push(action.payload);
-//   },
-//   prepare(name, number) {
-//     return {
-//       payload: {
-//         id: nanoid(),
-//         name: name.toString(),
-//         number: number.toString(),
-//       },
-//     };
-//   },
-// },
-
-// deleteContact: (state, action) => {
-//   state.items = state.items.filter(
-//     (contact) => contact.id !== action.payload
-//   );
-// },

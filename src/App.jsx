@@ -20,8 +20,15 @@ function App() {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+
+  if (loading)
+    return (
+      <>
+        <h1>Phonebook</h1>
+        <p>Loading...</p>
+      </>
+    );
 
   return (
     <>
