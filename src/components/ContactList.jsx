@@ -5,18 +5,23 @@ import { selectContacts, selectFilter } from "../redux/selectors";
 
 const ContactList = () => {
   const contacts = useSelector(selectContacts);
-  const statusFilter = useSelector(selectFilter);
+  console.log("Contacts in ContactList:", contacts);
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(statusFilter.toLowerCase())
-  );
+  // const statusFilter = useSelector(selectFilter);
+
+  // const filteredContacts = (contacts || []).filter(
+  //   (contact) =>
+  //     contact &&
+  //     contact.name &&
+  //     contact.name.toLowerCase().includes(statusFilter.toLowerCase())
+  // );
 
   return (
     <>
       <h2>ContactList:</h2>
-      {filteredContacts.length !== 0 ? (
+      {contacts.length !== 0 ? (
         <div className={styles.phoneList}>
-          {filteredContacts.map((contact) => (
+          {contacts.map((contact) => (
             <Contact
               key={contact.id}
               id={contact.id}

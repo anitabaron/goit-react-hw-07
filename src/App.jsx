@@ -2,15 +2,27 @@ import "./App.css";
 import ContactForm from "./components/ContactForm";
 import SearchBox from "./components/SearchBox";
 import ContactList from "./components/ContactList";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setFilter } from "./redux/filtersSlice";
+import { fetchContacts } from "./redux/operations";
+import { selectError, selectLoading } from "./redux/selectors";
 
 function App() {
   const dispatch = useDispatch();
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+
   useEffect(() => {
     dispatch(setFilter(""));
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <>
       <h1>Phonebook</h1>
